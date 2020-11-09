@@ -9,6 +9,7 @@ public class Chunk {
 	MeshRenderer meshRenderer;
 	MeshFilter meshFilter;
     GameObject chunkObject;
+    MeshCollider meshCollider;
 
 	int vertexIndex = 0;
 	List<Vector3> vertices = new List<Vector3> ();
@@ -27,6 +28,7 @@ public class Chunk {
         meshFilter = chunkObject.AddComponent<MeshFilter>();
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
         meshRenderer.material = world.material;
+        meshCollider = chunkObject.AddComponent<MeshCollider>();
         chunkObject.transform.SetParent(world.transform);
         chunkObject.transform.position = new Vector3(coord.x * VoxelData.chunkWidth, 0, coord.z * VoxelData.chunkWidth);
         chunkObject.name = "chunk [" + coord.x + "], [" + coord.z + "]";
@@ -34,6 +36,9 @@ public class Chunk {
         AddBlocksToChunk();
         CreateMeshData();
         CreateMesh();
+
+        meshCollider.sharedMesh = meshFilter.mesh;
+
     }
 
 	void AddBlocksToChunk ()
@@ -54,6 +59,11 @@ public class Chunk {
 		}
 
 	}
+
+    public GameObject getChunkObj()
+    {
+        return chunkObject;
+    }
 
 	void CreateMeshData ()
     {
@@ -113,7 +123,10 @@ public class Chunk {
 
 	}
 
-	void AddBlockDataToChunk (Vector3 pos)
+
+
+
+    void AddBlockDataToChunk (Vector3 pos)
     {
 
 		for (int p = 0; p < 6; p++)
@@ -188,5 +201,21 @@ public class ChunkCoord
     {
         x = xCoord;
         z = zCoord;
+    }
+
+    public bool CompareChunks(ChunkCoord other)
+    {
+        if (other == null)
+        {
+            return false;
+        }
+        else if (other.x == x && other.z == z)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
