@@ -64,8 +64,11 @@ public class Chunk {
             {
 				for (int z = 0; z < VoxelData.chunkWidth; z++)
                 {
-
-					AddBlockDataToChunk (new Vector3(x, y, z));
+                    if (world.blocktypes[blocksInChunk[x, y, z]].isSolid)
+                    {
+                        AddBlockDataToChunk(new Vector3(x, y, z));
+                    }
+					
 
 				}
 			}

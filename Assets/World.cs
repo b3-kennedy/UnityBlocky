@@ -6,6 +6,7 @@ public class World : MonoBehaviour
 {
     public Material material;
     public BlockType[] blocktypes;
+    public GameObject player;
 
     Chunk[,] chunks = new Chunk[VoxelData.WorldSizeInChunks, VoxelData.WorldSizeInChunks];
 
@@ -28,17 +29,37 @@ public class World : MonoBehaviour
 
     public int GetBlock(Vector3 pos)
     {
+
+        int yPos = Mathf.FloorToInt(pos.y);
         if (!IsVoxelInWorld(pos))
         {
             return 0;
         }
+
+
+        //Debug.Log(noise);
+        float scale = 0.5f;
+        float offset = 100;
+
         if (pos.y < 1)
         {
             return 1;
         }
-        else if (pos.y == VoxelData.chunkHeight - 1)
+
+        float noise = Mathf.PerlinNoise((pos.x) / VoxelData.chunkWidth * scale + offset, (pos.z) / VoxelData.chunkWidth * scale + offset);
+        int height = Mathf.FloorToInt(VoxelData.chunkHeight * noise);
+        if (yPos == height)
         {
             return 3;
+
+        }
+        else if(yPos > height)
+        {
+            return 0;
+        }
+        else if(yPos >= yPos - 3)
+        {
+            return 4;
         }
         else
         {
