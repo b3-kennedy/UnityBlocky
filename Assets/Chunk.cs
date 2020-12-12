@@ -16,14 +16,28 @@ public class Chunk {
 	List<int> triangles = new List<int> ();
 	List<Vector2> uvs = new List<Vector2> ();
 
-	int[,,] blocksInChunk = new int[VoxelData.chunkWidth, VoxelData.chunkHeight, VoxelData.chunkWidth];
+	public int[,,] blocksInChunk = new int[VoxelData.chunkWidth, VoxelData.chunkHeight, VoxelData.chunkWidth];
 
     World world;
 
-    public Chunk(World _world, ChunkCoord _coord)
+    private bool _isActive;
+    public bool areBlocksInChunk = false;
+
+    public Chunk(World _world, ChunkCoord _coord, bool generateOnLoad)
     {
         coord = _coord;
         world = _world;
+        _isActive = true;
+
+        if (generateOnLoad)
+        {
+            Init();
+        }
+
+    }
+
+    public void Init()
+    {
         chunkObject = new GameObject();
         meshFilter = chunkObject.AddComponent<MeshFilter>();
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
@@ -38,7 +52,6 @@ public class Chunk {
         CreateMesh();
 
         meshCollider.sharedMesh = meshFilter.mesh;
-
     }
 
 	void AddBlocksToChunk ()
@@ -57,7 +70,7 @@ public class Chunk {
 				}
 			}
 		}
-
+        areBlocksInChunk = true;
 	}
 
     public GameObject getChunkObj()
@@ -74,13 +87,12 @@ public class Chunk {
             {
 				for (int z = 0; z < VoxelData.chunkWidth; z++)
                 {
-                    if (world.blocktypes[blocksInChunk[x, y, z]].isSolid)
+                    if (world.blocktypes[blocksInChunk[x, y, z]].isSolid || world.blocktypes[blocksInChunk[x, y, z]].isTransparent )
                     {
                         AddBlockDataToChunk(new Vector3(x, y, z));
                     }
-					
-
-				}
+ 
+                }
 			}
 		}
 
@@ -88,8 +100,15 @@ public class Chunk {
 
     public bool isActive
     {
-        get { return chunkObject.activeSelf; }
-        set { chunkObject.SetActive(value);  }
+        get { return _isActive; }
+        set 
+        { 
+            _isActive = value;  
+            if(chunkObject != null)
+            {
+                chunkObject.SetActive(value);
+            }
+        }
     }
 
     public Vector3 position
@@ -106,16 +125,18 @@ public class Chunk {
         return true;
     }
 
-	bool CheckBlock (Vector3 pos)
+	public bool CheckBlock (Vector3 pos)
     {
 
 		int x = Mathf.FloorToInt (pos.x);
 		int y = Mathf.FloorToInt (pos.y);
 		int z = Mathf.FloorToInt (pos.z);
 
+        
+
 		if (!isBlockInChunk(x,y,z))
         {
-            return world.blocktypes[world.GetBlock(pos + position)].isSolid;
+            return world.CheckForBlock(pos + position);
         }
 			
 
@@ -123,6 +144,18 @@ public class Chunk {
 
 	}
 
+
+    public int GetBlockFromGlobalVector3(Vector3 pos)
+    {
+        int xCheck = Mathf.FloorToInt(pos.x);
+        int yCheck = Mathf.FloorToInt(pos.y);
+        int zCheck = Mathf.FloorToInt(pos.z);
+
+        xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
+        zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
+
+        return blocksInChunk[xCheck, yCheck, zCheck];
+    }
 
 
 
@@ -197,10 +230,25 @@ public class ChunkCoord
     public int x;
     public int z;
     
+    public ChunkCoord()
+    {
+        x = 0;
+        z = 0;
+    }
+
     public ChunkCoord(int xCoord, int zCoord)
     {
         x = xCoord;
         z = zCoord;
+    }
+
+    public ChunkCoord(Vector3 pos)
+    {
+        int xCheck = Mathf.FloorToInt(pos.x);
+        int zCheck = Mathf.FloorToInt(pos.z);
+
+        x = xCheck / VoxelData.chunkWidth;
+        z = zCheck / VoxelData.chunkWidth;
     }
 
     public bool CompareChunks(ChunkCoord other)
