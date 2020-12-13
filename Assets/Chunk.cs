@@ -42,16 +42,16 @@ public class Chunk {
         meshFilter = chunkObject.AddComponent<MeshFilter>();
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
         meshRenderer.material = world.material;
-        meshCollider = chunkObject.AddComponent<MeshCollider>();
+        
         chunkObject.transform.SetParent(world.transform);
         chunkObject.transform.position = new Vector3(coord.x * VoxelData.chunkWidth, 0, coord.z * VoxelData.chunkWidth);
         chunkObject.name = "chunk [" + coord.x + "], [" + coord.z + "]";
 
         AddBlocksToChunk();
-        CreateMeshData();
-        CreateMesh();
+        UpdateChunk();
+        
 
-        meshCollider.sharedMesh = meshFilter.mesh;
+        
     }
 
 	void AddBlocksToChunk ()
@@ -78,10 +78,11 @@ public class Chunk {
         return chunkObject;
     }
 
-	void CreateMeshData ()
+	void UpdateChunk ()
     {
 
-		for (int y = 0; y < VoxelData.chunkHeight; y++)
+        ClearMeshData();
+        for (int y = 0; y < VoxelData.chunkHeight; y++)
         {
 			for (int x = 0; x < VoxelData.chunkWidth; x++)
             {
@@ -89,14 +90,25 @@ public class Chunk {
                 {
                     if (world.blocktypes[blocksInChunk[x, y, z]].isSolid || world.blocktypes[blocksInChunk[x, y, z]].isTransparent )
                     {
-                        AddBlockDataToChunk(new Vector3(x, y, z));
+                        UpdateMeshData(new Vector3(x, y, z));
                     }
  
                 }
 			}
 		}
 
-	}
+        CreateMesh();
+
+    }
+
+    void ClearMeshData()
+    {
+        Object.Destroy(chunkObject.GetComponent<MeshCollider>());
+        vertexIndex = 0;
+        vertices.Clear();
+        triangles.Clear();
+        uvs.Clear();
+    }
 
     public bool isActive
     {
@@ -123,6 +135,36 @@ public class Chunk {
             return false;
         }
         return true;
+    }
+
+    public void EditVoxel(Vector3 pos, int newID)
+    {
+        int xCheck = Mathf.FloorToInt(pos.x);
+        int yCheck = Mathf.FloorToInt(pos.y);
+        int zCheck = Mathf.FloorToInt(pos.z);
+
+        xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
+        zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
+
+        blocksInChunk[xCheck, yCheck, zCheck] = newID;
+
+
+        UpdateChunk();
+    }
+
+    void UpdateSurroundingBlocks(int x, int y, int z)
+    {
+        Vector3 thisBlock = new Vector3(x, y, z);
+
+        for (int i = 0; i < 6; i++)
+        {
+            Vector3 currentBlock = thisBlock + VoxelData.faceChecks[i];
+
+            if(!isBlockInChunk((int)currentBlock.x, (int)currentBlock.y, (int)currentBlock.z))
+            {
+                world.GetChunkVector3(currentBlock + position).UpdateChunk();
+            }
+        }
     }
 
 	public bool CheckBlock (Vector3 pos)
@@ -159,7 +201,7 @@ public class Chunk {
 
 
 
-    void AddBlockDataToChunk (Vector3 pos)
+    void UpdateMeshData (Vector3 pos)
     {
 
 		for (int p = 0; p < 6; p++)
@@ -201,8 +243,10 @@ public class Chunk {
 		mesh.RecalculateNormals ();
 
 		meshFilter.mesh = mesh;
+        meshCollider = chunkObject.AddComponent<MeshCollider>();
+        meshCollider.sharedMesh = meshFilter.mesh;
 
-	}
+    }
 
     void AddTexture (int textureID)
     {
