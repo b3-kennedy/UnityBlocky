@@ -111,15 +111,16 @@ public class World : MonoBehaviour
                     {
                         chunks[x, z] = new Chunk(this, new ChunkCoord(x, z), false);
                         chunksToCreate.Add(new ChunkCoord(x, z));
+                        activeChunks.Add(thisChunk);
                     }                      
                     else if (!chunks[x, z].isActive)
                     {
                         chunks[x, z].isActive = true;
                         chunks[x, z].getChunkObj().GetComponent<MeshCollider>().enabled = true;
-                        activeChunks.Add(thisChunk);
+                        
                     }
 
-
+                    
                 }
                 for (int i = 0; i < inactiveChunks.Count; i++)
                 {

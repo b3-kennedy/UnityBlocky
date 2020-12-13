@@ -156,10 +156,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaa81b716b5ce584290e22b35180a290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  seed: 0
   material: {fileID: 2100000, guid: f3b31f338bf0d4d46afc337850afdc64, type: 2}
   blocktypes:
   - blockName: Air
     isSolid: 0
+    isTransparent: 0
     backFaceTexture: 0
     frontFaceTexture: 0
     topFaceTexture: 0
@@ -168,6 +170,7 @@ MonoBehaviour:
     rightFaceTexture: 0
   - blockName: Bedrock
     isSolid: 1
+    isTransparent: 0
     backFaceTexture: 9
     frontFaceTexture: 9
     topFaceTexture: 9
@@ -176,6 +179,7 @@ MonoBehaviour:
     rightFaceTexture: 9
   - blockName: Stone
     isSolid: 1
+    isTransparent: 0
     backFaceTexture: 0
     frontFaceTexture: 0
     topFaceTexture: 0
@@ -184,6 +188,7 @@ MonoBehaviour:
     rightFaceTexture: 0
   - blockName: Grass
     isSolid: 1
+    isTransparent: 0
     backFaceTexture: 2
     frontFaceTexture: 2
     topFaceTexture: 7
@@ -192,6 +197,7 @@ MonoBehaviour:
     rightFaceTexture: 2
   - blockName: Dirt
     isSolid: 1
+    isTransparent: 0
     backFaceTexture: 1
     frontFaceTexture: 1
     topFaceTexture: 1
@@ -199,6 +205,9 @@ MonoBehaviour:
     leftFaceTexture: 1
     rightFaceTexture: 1
   player: {fileID: 225803790}
+  maxNoiseHeight: 24
+  minNoiseHeight: 24
+  waterLevel: 0
 --- !u!4 &651717365
 Transform:
   m_ObjectHideFlags: 0
@@ -432,6 +441,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4207293392497186, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 54063890643546284, guid: 11aaea5348574644a9eb4f4504fcce3f,
+        type: 3}
+      propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114497868231759342, guid: 11aaea5348574644a9eb4f4504fcce3f,
