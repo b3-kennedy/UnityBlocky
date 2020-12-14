@@ -87,11 +87,6 @@ public class FirstPersonMovement : MonoBehaviour
                     if (world.CheckForBlock(roundedPosition))
                     {
                         world.GetChunkVector3(roundedPosition).EditVoxel(roundedPosition, 0);
-                        Debug.Log("hit block destroy");
-                    }
-                    else
-                    {
-                        Debug.Log("missed block");
                     }
                 }
                 else
@@ -101,17 +96,10 @@ public class FirstPersonMovement : MonoBehaviour
                     float zPos = hit.point.z + GetZNorm(hit.normal);
 
                     roundedPosition = new Vector3(Mathf.FloorToInt(xPos), Mathf.FloorToInt(yPos), Mathf.FloorToInt(zPos));
-                    //roundedPosition = roundedPosition + hit.normal;
-                    Debug.Log(roundedPosition);
 
                     if (!world.CheckForBlock(roundedPosition))
                     {
                         world.GetChunkVector3(roundedPosition).EditVoxel(roundedPosition, selectedBlockIndex);
-                        Debug.Log("hit block create");
-                    }
-                    else
-                    {
-                        Debug.Log("missed block");
                     }
                 }
             }
@@ -161,7 +149,6 @@ public class FirstPersonMovement : MonoBehaviour
         {
             y = -1;
         }
-        Debug.LogError(y);
         return y;
     }
 

@@ -161,7 +161,7 @@ MonoBehaviour:
   blocktypes:
   - blockName: Air
     isSolid: 0
-    isTransparent: 0
+    isTransparent: 1
     backFaceTexture: 0
     frontFaceTexture: 0
     topFaceTexture: 0
@@ -204,6 +204,15 @@ MonoBehaviour:
     bottomFaceTexture: 1
     leftFaceTexture: 1
     rightFaceTexture: 1
+  - blockName: Glass
+    isSolid: 1
+    isTransparent: 1
+    backFaceTexture: 3
+    frontFaceTexture: 3
+    topFaceTexture: 3
+    bottomFaceTexture: 3
+    leftFaceTexture: 3
+    rightFaceTexture: 3
   player: {fileID: 225803790}
   maxNoiseHeight: 24
   minNoiseHeight: 24
