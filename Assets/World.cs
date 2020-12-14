@@ -192,29 +192,66 @@ public class World : MonoBehaviour
 
         float noise = Mathf.PerlinNoise((pos.x) / VoxelData.chunkWidth * scale + offset, (pos.z) / VoxelData.chunkWidth * scale + offset);
         int height = Mathf.FloorToInt(maxNoiseHeight * noise + minNoiseHeight);
+        int value = 0;
 
 
 
         if (yPos == height)
         {
-            return 3;
+            value =  3;
 
         }
         else if (yPos > height)
         {
-            return 0;
+            value =  0;
         }
         else if (yPos < height && yPos > height - 4)
         {
-            return 4;
+            value =  4;
         }
 
         else
         {
-            return 2;
+            value =  2;
         }
 
 
+        if(value == 2)
+        {
+            if(yPos > 1 && yPos < 255)
+            {
+                if(Get3DPerlin(pos, 0, 0.1f, 0.5f))
+                {
+                    value = 0;
+                }
+            }
+        }
+
+
+        return value;
+
+
+    }
+
+    bool Get3DPerlin(Vector3 position, float offset, float scale, float threshold)
+    {
+        float x = (position.x + offset + 0.1f) * scale;
+        float y = (position.y + offset + 0.1f) * scale;
+        float z = (position.z + offset + 0.1f) * scale;
+
+        float AB = Mathf.PerlinNoise(x, y);
+        float BC = Mathf.PerlinNoise(y, z);
+        float AC = Mathf.PerlinNoise(x, z);
+        float BA = Mathf.PerlinNoise(y, x);
+        float CB = Mathf.PerlinNoise(z, y);
+        float CA = Mathf.PerlinNoise(z, x);
+
+        //if ((AB + BC + AC + BA + CB + CA) / 6f > threshold)
+        //    return true;
+        //else
+        //    return false;
+
+        return ((AB + BC + AC + BA + CB + CA) / 6f > threshold);
     }
 
 

@@ -75,7 +75,7 @@ public class FirstPersonMovement : MonoBehaviour
         if(Physics.Linecast(Camera.main.transform.position, position, out hit))
         {
             
-            if (hit.transform.GetComponent<MeshRenderer>())
+            if (hit.transform.GetComponent<MeshCollider>())
             {
 
                 if (type == 0)
