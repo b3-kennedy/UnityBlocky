@@ -215,7 +215,7 @@ public class World : MonoBehaviour
             value =  2;
         }
 
-
+        //caves
         if(value == 2)
         {
             if(yPos > 1 && yPos < 255)
@@ -245,11 +245,6 @@ public class World : MonoBehaviour
         float BA = Mathf.PerlinNoise(y, x);
         float CB = Mathf.PerlinNoise(z, y);
         float CA = Mathf.PerlinNoise(z, x);
-
-        //if ((AB + BC + AC + BA + CB + CA) / 6f > threshold)
-        //    return true;
-        //else
-        //    return false;
 
         return ((AB + BC + AC + BA + CB + CA) / 6f > threshold);
     }

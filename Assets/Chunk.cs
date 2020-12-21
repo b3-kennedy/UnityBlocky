@@ -242,12 +242,13 @@ public class Chunk
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.uv = uvs.ToArray();
-
-        mesh.RecalculateNormals();
-
         meshFilter.mesh = mesh;
         meshCollider = chunkObject.AddComponent<MeshCollider>();
         meshCollider.sharedMesh = meshFilter.mesh;
+
+        mesh.RecalculateNormals();
+
+
 
     }
 
