@@ -350,6 +350,15 @@ MonoBehaviour:
     bottomFaceTexture: 1
     leftFaceTexture: 1
     rightFaceTexture: 1
+  - blockName: Sand
+    isSolid: 1
+    isTransparent: 0
+    backFaceTexture: 10
+    frontFaceTexture: 10
+    topFaceTexture: 10
+    bottomFaceTexture: 10
+    leftFaceTexture: 10
+    rightFaceTexture: 10
   player: {fileID: 225803790}
   maxNoiseHeight: 15
   minNoiseHeight: 15

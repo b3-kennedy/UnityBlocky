@@ -168,6 +168,8 @@ public class World : MonoBehaviour
         return blocktypes[GetBlock(pos)].isSolid;
     }
 
+    
+
 
 
     public int GetBlock(Vector3 pos)
@@ -198,35 +200,44 @@ public class World : MonoBehaviour
 
         if (yPos == height)
         {
-            value =  3;
+            value = 3;
 
         }
         else if (yPos > height)
         {
-            value =  0;
+            value = 0;
         }
         else if (yPos < height && yPos > height - 4)
         {
-            value =  4;
+            value = 4;
         }
 
         else
         {
-            value =  2;
+            value = 2;
         }
 
         //caves
-        if(value == 2)
+        if (value == 2)
         {
-            if(yPos > 1 && yPos < 255)
+            if (yPos > 1 && yPos < 255)
             {
-                if(Get3DPerlin(pos, 0, 0.1f, 0.5f))
+                if (Get3DPerlin(pos, 0, 0.1f, 0.5f))
                 {
                     value = 0;
                 }
             }
         }
 
+        
+        //water
+        if(value == 0)
+        {
+            if(yPos > minNoiseHeight && yPos <= minNoiseHeight + waterLevel)
+            {
+                value = 5;
+            }
+        }
 
         return value;
 
