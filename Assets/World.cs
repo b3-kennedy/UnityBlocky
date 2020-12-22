@@ -8,9 +8,16 @@ public class World : MonoBehaviour
     public Material material;
     public BlockType[] blocktypes;
     public Transform player;
+    [Header("Terrain")]
+    public float scale = 0.5f;
+    public float offset = 0;
     public float maxNoiseHeight = 24;
     public float minNoiseHeight = 24;
     public float waterLevel;
+    [Header("Caves")]
+    public float caveScale;
+    public float caveOffset;
+    public float caveThreshold;
     Vector3 spawnPos;
     Chunk[,] chunks = new Chunk[VoxelData.WorldSizeInChunks, VoxelData.WorldSizeInChunks];
 
@@ -189,15 +196,17 @@ public class World : MonoBehaviour
             return 1;
         }
 
-        float scale = 0.5f;
-        float offset = 100;
 
         float noise = Mathf.PerlinNoise((pos.x) / VoxelData.chunkWidth * scale + offset, (pos.z) / VoxelData.chunkWidth * scale + offset);
-        int height = Mathf.FloorToInt(maxNoiseHeight * noise + minNoiseHeight);
+        
+
+        float noise2 = Mathf.PerlinNoise((pos.x) / VoxelData.chunkWidth * 0.7f + 0.2f, (pos.z) / VoxelData.chunkWidth * 0.7f + 0.2f);
+        int height2 = Mathf.FloorToInt(maxNoiseHeight * noise + minNoiseHeight);
         int value = 0;
 
+        int height = Mathf.FloorToInt(maxNoiseHeight * (noise + (noise2)) + minNoiseHeight);
 
-
+        //surface
         if (yPos == height)
         {
             value = 3;
@@ -217,12 +226,15 @@ public class World : MonoBehaviour
             value = 2;
         }
 
+
+
+
         //caves
         if (value == 2)
         {
             if (yPos > 1 && yPos < 255)
             {
-                if (Get3DPerlin(pos, 0, 0.1f, 0.5f))
+                if (Get3DPerlin(pos, caveOffset, caveScale, caveThreshold))
                 {
                     value = 0;
                 }
@@ -233,7 +245,7 @@ public class World : MonoBehaviour
         //water
         if(value == 0)
         {
-            if(yPos > minNoiseHeight && yPos <= minNoiseHeight + waterLevel)
+            if(yPos > height && yPos <= minNoiseHeight + waterLevel)
             {
                 value = 5;
             }

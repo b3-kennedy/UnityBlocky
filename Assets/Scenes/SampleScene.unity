@@ -302,7 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaa81b716b5ce584290e22b35180a290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 0
+  seed: 2147483647
   material: {fileID: 2100000, guid: f3b31f338bf0d4d46afc337850afdc64, type: 2}
   blocktypes:
   - blockName: Air
@@ -360,9 +360,14 @@ MonoBehaviour:
     leftFaceTexture: 10
     rightFaceTexture: 10
   player: {fileID: 225803790}
-  maxNoiseHeight: 15
-  minNoiseHeight: 15
-  waterLevel: 0
+  scale: 0.5
+  offset: 0
+  maxNoiseHeight: 24
+  minNoiseHeight: 24
+  waterLevel: 20
+  caveScale: 0.15
+  caveOffset: 0
+  caveThreshold: 0.6
 --- !u!4 &651717365
 Transform:
   m_ObjectHideFlags: 0
