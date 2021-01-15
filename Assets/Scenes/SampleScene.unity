@@ -359,15 +359,35 @@ MonoBehaviour:
     bottomFaceTexture: 10
     leftFaceTexture: 10
     rightFaceTexture: 10
+  - blockName: Wood
+    isSolid: 1
+    isTransparent: 0
+    backFaceTexture: 5
+    frontFaceTexture: 5
+    topFaceTexture: 6
+    bottomFaceTexture: 6
+    leftFaceTexture: 5
+    rightFaceTexture: 5
+  - blockName: Leaves
+    isSolid: 1
+    isTransparent: 0
+    backFaceTexture: 8
+    frontFaceTexture: 8
+    topFaceTexture: 8
+    bottomFaceTexture: 8
+    leftFaceTexture: 8
+    rightFaceTexture: 8
   player: {fileID: 225803790}
   scale: 0.5
   offset: 0
   maxNoiseHeight: 24
   minNoiseHeight: 24
-  waterLevel: 20
+  maxTreeSize: 10
+  minTreeSize: 5
+  waterLevel: 5
   caveScale: 0.15
   caveOffset: 0
-  caveThreshold: 0.6
+  caveThreshold: 0.5
 --- !u!4 &651717365
 Transform:
   m_ObjectHideFlags: 0

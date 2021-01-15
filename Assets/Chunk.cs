@@ -11,6 +11,7 @@ public class Chunk
     MeshFilter meshFilter;
     GameObject chunkObject;
     MeshCollider meshCollider;
+    int treeHeight;
 
     int vertexIndex = 0;
     List<Vector3> vertices = new List<Vector3>();
@@ -68,11 +69,81 @@ public class Chunk
                 {
 
                     blocksInChunk[x, y, z] = world.GetBlock(new Vector3(x, y, z) + position);
+ 
 
 
                 }
             }
         }
+
+        for (int y = 1; y < VoxelData.chunkHeight-1; y++)
+        {
+            for (int x = 1; x < VoxelData.chunkWidth-1; x++)
+            {
+                for (int z = 1; z < VoxelData.chunkWidth-1; z++)
+                {
+                    
+                    if (blocksInChunk[x, y, z] == 6)
+                    {
+                        for (int k = 0; k < 3; k++)
+                        {
+                            for (int j = 0; j < 3; j++)
+                            {
+                                for (int l = 0; l < 3; l++)
+                                {
+                                    if (isBlockInChunk(x+k, y+j, z+l))
+                                    {
+                                        blocksInChunk[x + k, y + j, z + l] = 7;
+                                    }
+                                    if (isBlockInChunk(x - k, y - j, z - l))
+                                    {
+                                        blocksInChunk[x - k, y - j, z - l] = 7;
+                                    }
+                                    if(isBlockInChunk(x+k, y-j, z - l))
+                                    {
+                                        blocksInChunk[x + k, y - j, z - l] = 7;
+                                    }
+                                    if (isBlockInChunk(x + k, y + j, z - l))
+                                    {
+                                        blocksInChunk[x + k, y + j, z - l] = 7;
+                                    }
+                                    if (isBlockInChunk(x - k, y + j, z - l))
+                                    {
+                                        blocksInChunk[x - k, y + j, z - l] = 7;
+                                    }
+                                    if (isBlockInChunk(x - k, y - j, z + l))
+                                    {
+                                        blocksInChunk[x - k, y - j, z + l] = 7;
+                                    }
+                                    if (isBlockInChunk(x - k, y + j, z + l))
+                                    {
+                                        blocksInChunk[x - k, y + j, z + l] = 7;
+                                    }
+                                    if (isBlockInChunk(x + k, y - j, z + l))
+                                    {
+                                        blocksInChunk[x + k, y - j, z + l] = 7;
+                                    }
+
+                                }
+                            }
+                        }
+
+                        for (int i = 0; i < world.maxTreeSize; i++)
+                        {
+                            if (blocksInChunk[x, y - i, z] == 0)
+                            {
+                                blocksInChunk[x, y - i, z] = 6;
+                            }
+
+                        }
+
+
+                    }
+                }
+            }
+        }
+
+        
         areBlocksInChunk = true;
     }
 
@@ -249,8 +320,6 @@ public class Chunk
         meshCollider.sharedMesh = meshFilter.mesh;
 
         mesh.RecalculateNormals();
-
-
 
     }
 

@@ -13,11 +13,16 @@ public class World : MonoBehaviour
     public float offset = 0;
     public float maxNoiseHeight = 24;
     public float minNoiseHeight = 24;
+    public int maxTreeSize = 7;
+    public int minTreeSize = 4;
+    int noiseHeight;
     public float waterLevel;
     [Header("Caves")]
     public float caveScale;
     public float caveOffset;
     public float caveThreshold;
+    int randomNum = 0;
+    List<Vector3> treeCentre;
     Vector3 spawnPos;
     Chunk[,] chunks = new Chunk[VoxelData.WorldSizeInChunks, VoxelData.WorldSizeInChunks];
 
@@ -182,7 +187,8 @@ public class World : MonoBehaviour
     public int GetBlock(Vector3 pos)
     {
 
-
+        
+        randomNum = Random.Range(0, 1000);
         int yPos = Mathf.FloorToInt(pos.y);
         if (!IsVoxelInWorld(pos))
         {
@@ -198,25 +204,22 @@ public class World : MonoBehaviour
 
 
         float noise = Mathf.PerlinNoise((pos.x) / VoxelData.chunkWidth * scale + offset, (pos.z) / VoxelData.chunkWidth * scale + offset);
-        
 
-        float noise2 = Mathf.PerlinNoise((pos.x) / VoxelData.chunkWidth * 0.7f + 0.2f, (pos.z) / VoxelData.chunkWidth * 0.7f + 0.2f);
-        int height2 = Mathf.FloorToInt(maxNoiseHeight * noise + minNoiseHeight);
+        noiseHeight = Mathf.FloorToInt(maxNoiseHeight * noise + minNoiseHeight);
         int value = 0;
 
-        int height = Mathf.FloorToInt(maxNoiseHeight * (noise + (noise2)) + minNoiseHeight);
 
         //surface
-        if (yPos == height)
+        if (yPos == noiseHeight)
         {
             value = 3;
 
         }
-        else if (yPos > height)
+        else if (yPos > noiseHeight)
         {
             value = 0;
         }
-        else if (yPos < height && yPos > height - 4)
+        else if (yPos < noiseHeight && yPos > noiseHeight - 4)
         {
             value = 4;
         }
@@ -245,16 +248,32 @@ public class World : MonoBehaviour
         //water
         if(value == 0)
         {
-            if(yPos > height && yPos <= minNoiseHeight + waterLevel)
+            if(yPos > noiseHeight && yPos <= minNoiseHeight + waterLevel)
             {
                 value = 5;
             }
         }
 
+        if(value != 5) 
+        {
+            if (randomNum < 2)
+            {
+                randomNum = Random.Range(minTreeSize, maxTreeSize);
+                if (yPos == noiseHeight +randomNum)
+                {
+                    value = 6;
+                }
+            }
+        }
+
+        
+
+
+
         return value;
 
-
     }
+
 
     bool Get3DPerlin(Vector3 position, float offset, float scale, float threshold)
     {
