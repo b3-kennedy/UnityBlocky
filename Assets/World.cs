@@ -13,6 +13,7 @@ public class World : MonoBehaviour
     public float offset = 0;
     public float maxNoiseHeight = 24;
     public float minNoiseHeight = 24;
+    public int treeDensity = 20;
     public int maxTreeSize = 7;
     public int minTreeSize = 4;
     int noiseHeight;
@@ -21,7 +22,7 @@ public class World : MonoBehaviour
     public float caveScale;
     public float caveOffset;
     public float caveThreshold;
-    int randomNum = 0;
+    public int randomNum = 0;
     List<Vector3> treeCentre;
     Vector3 spawnPos;
     Chunk[,] chunks = new Chunk[VoxelData.WorldSizeInChunks, VoxelData.WorldSizeInChunks];
@@ -38,7 +39,9 @@ public class World : MonoBehaviour
     {
         Random.InitState(seed);
 
-        spawnPos = new Vector3(VoxelData.WorldSizeInChunks / 2, VoxelData.chunkHeight, VoxelData.WorldSizeInChunks / 2);
+        Vector3 spawnPos = new Vector3((VoxelData.WorldSizeInChunks / 2) * 16, 200, (VoxelData.WorldSizeInChunks / 2) * 16);
+        player.transform.position = spawnPos;
+        
         GenerateWorld();
         lastVisitedChunk = getChunkCoordVector3(player.position);
 
@@ -70,7 +73,6 @@ public class World : MonoBehaviour
                 activeChunks.Add(new ChunkCoord(x, z));
             }
         }
-        SpawnPlayer();
     }
 
     IEnumerator CreateChunks()
@@ -85,10 +87,6 @@ public class World : MonoBehaviour
         creatingChunks = false;
     }
 
-    void SpawnPlayer()
-    {
-        player.position = spawnPos;
-    }
 
     ChunkCoord getChunkCoordVector3(Vector3 pos)
     {
@@ -190,6 +188,9 @@ public class World : MonoBehaviour
         
         randomNum = Random.Range(0, 1000);
         int yPos = Mathf.FloorToInt(pos.y);
+        int xPos = Mathf.FloorToInt(pos.x);
+        int zPos = Mathf.FloorToInt(pos.z);
+
         if (!IsVoxelInWorld(pos))
         {
             return 0;
@@ -254,12 +255,13 @@ public class World : MonoBehaviour
             }
         }
 
-        if(value != 5) 
+        //trees
+
+        if (value != 5) 
         {
-            if (randomNum < 2)
+            if (randomNum < treeDensity)
             {
-                randomNum = Random.Range(minTreeSize, maxTreeSize);
-                if (yPos == noiseHeight +randomNum)
+                if (yPos == noiseHeight + 1)
                 {
                     value = 6;
                 }

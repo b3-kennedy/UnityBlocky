@@ -371,23 +371,25 @@ MonoBehaviour:
   - blockName: Leaves
     isSolid: 1
     isTransparent: 0
-    backFaceTexture: 8
-    frontFaceTexture: 8
-    topFaceTexture: 8
-    bottomFaceTexture: 8
-    leftFaceTexture: 8
-    rightFaceTexture: 8
+    backFaceTexture: 12
+    frontFaceTexture: 12
+    topFaceTexture: 12
+    bottomFaceTexture: 12
+    leftFaceTexture: 12
+    rightFaceTexture: 12
   player: {fileID: 225803790}
   scale: 0.5
   offset: 0
   maxNoiseHeight: 24
   minNoiseHeight: 24
+  treeDensity: 20
   maxTreeSize: 10
-  minTreeSize: 5
-  waterLevel: 5
+  minTreeSize: 6
+  waterLevel: 10
   caveScale: 0.15
   caveOffset: 0
   caveThreshold: 0.5
+  randomNum: 0
 --- !u!4 &651717365
 Transform:
   m_ObjectHideFlags: 0

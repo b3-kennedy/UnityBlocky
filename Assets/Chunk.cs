@@ -11,7 +11,7 @@ public class Chunk
     MeshFilter meshFilter;
     GameObject chunkObject;
     MeshCollider meshCollider;
-    int treeHeight;
+    int treeHeight = 0;
 
     int vertexIndex = 0;
     List<Vector3> vertices = new List<Vector3>();
@@ -19,7 +19,7 @@ public class Chunk
     List<Vector2> uvs = new List<Vector2>();
 
     public int[,,] blocksInChunk = new int[VoxelData.chunkWidth, VoxelData.chunkHeight, VoxelData.chunkWidth];
-
+    int randomNum;
     World world;
 
     private bool _isActive;
@@ -61,6 +61,7 @@ public class Chunk
     void AddBlocksToChunk()
     {
 
+        
         for (int y = 0; y < VoxelData.chunkHeight; y++)
         {
             for (int x = 0; x < VoxelData.chunkWidth; x++)
@@ -76,74 +77,111 @@ public class Chunk
             }
         }
 
-        for (int y = 1; y < VoxelData.chunkHeight-1; y++)
+        for (int y = 1; y < VoxelData.chunkHeight - world.maxTreeSize; y++)
         {
-            for (int x = 1; x < VoxelData.chunkWidth-1; x++)
+            for (int x = 1; x < VoxelData.chunkWidth - 1; x++)
             {
-                for (int z = 1; z < VoxelData.chunkWidth-1; z++)
+                for (int z = 1; z < VoxelData.chunkWidth - 1; z++)
                 {
-                    
-                    if (blocksInChunk[x, y, z] == 6)
-                    {
-                        for (int k = 0; k < 3; k++)
-                        {
-                            for (int j = 0; j < 3; j++)
-                            {
-                                for (int l = 0; l < 3; l++)
-                                {
-                                    if (isBlockInChunk(x+k, y+j, z+l))
-                                    {
-                                        blocksInChunk[x + k, y + j, z + l] = 7;
-                                    }
-                                    if (isBlockInChunk(x - k, y - j, z - l))
-                                    {
-                                        blocksInChunk[x - k, y - j, z - l] = 7;
-                                    }
-                                    if(isBlockInChunk(x+k, y-j, z - l))
-                                    {
-                                        blocksInChunk[x + k, y - j, z - l] = 7;
-                                    }
-                                    if (isBlockInChunk(x + k, y + j, z - l))
-                                    {
-                                        blocksInChunk[x + k, y + j, z - l] = 7;
-                                    }
-                                    if (isBlockInChunk(x - k, y + j, z - l))
-                                    {
-                                        blocksInChunk[x - k, y + j, z - l] = 7;
-                                    }
-                                    if (isBlockInChunk(x - k, y - j, z + l))
-                                    {
-                                        blocksInChunk[x - k, y - j, z + l] = 7;
-                                    }
-                                    if (isBlockInChunk(x - k, y + j, z + l))
-                                    {
-                                        blocksInChunk[x - k, y + j, z + l] = 7;
-                                    }
-                                    if (isBlockInChunk(x + k, y - j, z + l))
-                                    {
-                                        blocksInChunk[x + k, y - j, z + l] = 7;
-                                    }
 
+                    if (blocksInChunk[x, y, z] == 6 && blocksInChunk[x,y+1,z] == 0)
+                    {
+
+                        randomNum = Random.Range(world.minTreeSize, world.maxTreeSize);
+                        if (treeHeight <= randomNum)
+                        {
+                            for (int i = 0; i < randomNum; i++)
+                            {
+                                if (blocksInChunk[x, y + i, z] == 0)
+                                {
+                                    blocksInChunk[x, y + i, z] = 6;
+                                }
+                                treeHeight++;
+                                
+                            }
+                            
+                        }
+                        
+
+                        if(blocksInChunk[x, y, z] == 6 && blocksInChunk[x,y-5,z] == 6 || blocksInChunk[x, y - 5, z] == 7)
+                        {
+                            int leafNum1 = Random.Range(2, 4);
+                            int leafNum2 = Random.Range(2, 4);
+                            int leafNum3 = Random.Range(2, 4);
+                            for (int k = 0; k < leafNum1; k++)
+                            {
+                                for (int j = 0; j < leafNum2; j++)
+                                {
+                                    for (int l = 0; l < leafNum3; l++)
+                                    {
+                                        if (isBlockInChunk(x + k, y + j, z + l))
+                                        {
+                                            blocksInChunk[x + k, y + j, z + l] = 7;
+                                        }
+                                        if (isBlockInChunk(x - k, y - j, z - l))
+                                        {
+                                            blocksInChunk[x - k, y - j, z - l] = 7;
+                                        }
+                                        if (isBlockInChunk(x + k, y - j, z - l))
+                                        {
+                                            blocksInChunk[x + k, y - j, z - l] = 7;
+                                        }
+                                        if (isBlockInChunk(x + k, y + j, z - l))
+                                        {
+                                            blocksInChunk[x + k, y + j, z - l] = 7;
+                                        }
+                                        if (isBlockInChunk(x - k, y + j, z - l))
+                                        {
+                                            blocksInChunk[x - k, y + j, z - l] = 7;
+                                        }
+                                        if (isBlockInChunk(x - k, y - j, z + l))
+                                        {
+                                            blocksInChunk[x - k, y - j, z + l] = 7;
+                                        }
+                                        if (isBlockInChunk(x - k, y + j, z + l))
+                                        {
+                                            blocksInChunk[x - k, y + j, z + l] = 7;
+                                        }
+                                        if (isBlockInChunk(x + k, y - j, z + l))
+                                        {
+                                            blocksInChunk[x + k, y - j, z + l] = 7;
+                                        }
+
+                                    }
                                 }
                             }
                         }
 
-                        for (int i = 0; i < world.maxTreeSize; i++)
-                        {
-                            if (blocksInChunk[x, y - i, z] == 0)
-                            {
-                                blocksInChunk[x, y - i, z] = 6;
-                            }
 
-                        }
+
+
+
 
 
                     }
                 }
             }
         }
+        treeHeight = 0;
 
-        
+        for (int y = 0; y < VoxelData.chunkHeight; y++)
+        {
+            for (int x = 0; x < VoxelData.chunkWidth; x++)
+            {
+                for (int z = 0; z < VoxelData.chunkWidth; z++)
+                {
+                    if (blocksInChunk[x, y, z] == 6)
+                    {
+                        if (blocksInChunk[x, y + 1, z] == 0)
+                        {
+                            blocksInChunk[x, y, z] = 0;
+                        }
+                    }
+                }
+            }
+        }
+
+
         areBlocksInChunk = true;
     }
 
